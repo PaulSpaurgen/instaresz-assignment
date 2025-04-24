@@ -89,9 +89,13 @@ const FormBuilder = () => {
   };
 
   const handleSubmit = () => {
+    
     if (validateForm()) {
       console.log("Form is valid:", { formValues });
-      // Process form submission here
+
+      // API call to the backend
+      alert(JSON.stringify(formValues, null, 2));
+      
     } else {
       console.log("Form has errors:", formErrors);
     }
@@ -102,7 +106,7 @@ const FormBuilder = () => {
       <div className="w-[90%] max-w-[90%] lg:max-w-[800px] lg:w-[800px] mx-auto border-[1px] border-gray-300 p-6 mt-4 rounded-md">
         {!formElements.length && (
           <p className="text-gray-500 text-center py-8">
-            Please create a form input
+            Please create a form input element
           </p>
         )}
         <form onSubmit={(e) => e.preventDefault()}>
@@ -128,8 +132,9 @@ const FormBuilder = () => {
             Add Element
           </button>
           <button
-            className="w-full px-4 py-2 border-[1px] text-sm cursor-pointer bg-black text-white hover:bg-blue-600 rounded-md shadow-sm transition-colors"
+            className="w-full px-4 py-2 border-[1px] text-sm cursor-pointer bg-black text-white   hover:bg-black-600 rounded-md shadow-sm transition-colors"
             onClick={handleSubmit}
+            disabled={!formElements.length}
           >
             Submit
           </button>

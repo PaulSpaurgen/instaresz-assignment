@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import FormsComponent from './FormsComponent';
 import { FormElement } from '../types/form';
-
+import { MdDelete } from "react-icons/md";
 interface DraggableFormElementProps {
   element: FormElement;
   index: number;
@@ -94,9 +94,9 @@ export const DraggableFormElement = ({
         <button
           type="button"
           onClick={onDelete}
-          className="text-red-500 hover:text-red-700"
+          className="text-red-500 hover:text-red-700 cursor-pointer"
         >
-          Delete
+         <MdDelete/>
         </button>
       </div>
       <FormsComponent
