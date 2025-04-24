@@ -1,6 +1,7 @@
 import { FC, useRef, useState } from "react";
 import Modal from "../Atoms/Modal";
 import FormsComponent from "./FormsComponent";
+import { MdDelete } from "react-icons/md";
 
 interface FormField {
   label: string;
@@ -26,7 +27,7 @@ const FormsCreationModal: FC<FormsCreationModalProps> = ({
     label: "",
     type: "text",
     placeholder: "",
-    required: false
+    required: false,
   });
   const [options, setOptions] = useState<{ label: string; value: string }[]>(
     []
@@ -40,42 +41,44 @@ const FormsCreationModal: FC<FormsCreationModalProps> = ({
     }
   };
 
-  const onClose = () =>{
+  const onClose = () => {
     dialogRef.current?.close();
     setFormField({
       label: "",
       type: "text",
       placeholder: "",
-      required: false
-    })
-    setIsModalOpen(false)
-  }
+      required: false,
+    });
+    setIsModalOpen(false);
+  };
 
   const handleSubmit = () => {
-
-    if (formField.label.trim() === '') {
+    if (formField.label.trim() === "") {
       return;
     }
 
-    if (formField.placeholder.trim() === '') {
+    if (formField.placeholder.trim() === "") {
       return;
     }
 
-    if (['dropdown', 'radio', 'checkbox'].includes(formField.type) && options.length === 0) {
+    if (
+      ["dropdown", "radio", "checkbox"].includes(formField.type) &&
+      options.length === 0
+    ) {
       return;
     }
-    
+
     const fieldData = {
       ...formField,
       ...(["dropdown", "checkbox", "radio"].includes(formField.type) &&
         options.length > 0 && {
           options,
         }),
-      name: formField.label.toLowerCase().replace(/[^a-z0-9]/g, '_'),
+      name: formField.label.toLowerCase().replace(/[^a-z0-9]/g, "_"),
     };
     console.log("Form Field Created:", fieldData);
     addElementToForm(fieldData);
-    onClose()
+    onClose();
   };
 
   if (isModalOpen && dialogRef.current && !dialogRef.current.open) {
@@ -83,13 +86,8 @@ const FormsCreationModal: FC<FormsCreationModalProps> = ({
   }
 
   return (
-    <Modal
-      dialogRef={dialogRef}
-      title="Create Form Field"
-      onClose={onClose}
-    >
+    <Modal dialogRef={dialogRef} title="Create Form Field" onClose={onClose}>
       <div className="flex flex-col gap-4">
-
         <FormsComponent
           name="fieldLabel"
           type="text"
@@ -97,7 +95,7 @@ const FormsCreationModal: FC<FormsCreationModalProps> = ({
           value={formField.label}
           onChange={(value) => setFormField({ ...formField, label: value })}
           required={true}
-          error={formField.label.trim() === '' ? 'Label is required' : ''}
+          error={formField.label.trim() === "" ? "Label is required" : ""}
         />
 
         <FormsComponent
@@ -105,9 +103,13 @@ const FormsCreationModal: FC<FormsCreationModalProps> = ({
           type="text"
           placeholder="Enter field placeholder"
           value={formField.placeholder}
-          onChange={(value) => setFormField({ ...formField, placeholder: value })}
+          onChange={(value) =>
+            setFormField({ ...formField, placeholder: value })
+          }
           required={true}
-          error={formField.placeholder.trim() === '' ? 'Placeholder is required' : ''}
+          error={
+            formField.placeholder.trim() === "" ? "Placeholder is required" : ""
+          }
         />
 
         <FormsComponent
@@ -131,7 +133,9 @@ const FormsCreationModal: FC<FormsCreationModalProps> = ({
             type="checkbox"
             id="required"
             checked={formField.required}
-            onChange={(e) => setFormField({ ...formField, required: e.target.checked })}
+            onChange={(e) =>
+              setFormField({ ...formField, required: e.target.checked })
+            }
           />
           <label htmlFor="required">Make this field required</label>
         </div>
@@ -145,25 +149,33 @@ const FormsCreationModal: FC<FormsCreationModalProps> = ({
                 type="text"
                 placeholder="Option Label"
                 value={newOption.label}
-                onChange={(value) => setNewOption({ ...newOption, label: value })}
+                onChange={(value) =>
+                  setNewOption({ ...newOption, label: value })
+                }
               />
               <FormsComponent
-                name="optionValue" 
+                name="optionValue"
                 type="text"
                 placeholder="Option Value"
                 value={newOption.value}
-                onChange={(value) => setNewOption({ ...newOption, value: value })}
+                onChange={(value) =>
+                  setNewOption({ ...newOption, value: value })
+                }
               />
             </div>
-            
-            <button
-                onClick={handleAddOption}
-                className="w-full px-4 py-2 border-[1px] text-sm cursor-pointer border-gray-300 hover:bg-gray-200 rounded-md shadow-sm transition-colors"
-              >
-                Add
-              </button>
 
-              {}
+            <button
+              onClick={handleAddOption}
+              className="w-full px-4 py-2 border-[1px] text-sm cursor-pointer border-gray-300 hover:bg-gray-200 rounded-md shadow-sm transition-colors"
+            >
+              Add
+            </button>
+
+            {!options.length && (
+              <span className="text-red-500 text-sm mt-1">
+                Please add options
+              </span>
+            )}
 
             <div className="flex flex-col gap-2 mt-4">
               {options.map((option, index) => (
@@ -172,12 +184,13 @@ const FormsCreationModal: FC<FormsCreationModalProps> = ({
                     {option.label} - {option.value}
                   </span>
                   <button
+                    type="button"
                     onClick={() =>
                       setOptions(options.filter((_, i) => i !== index))
                     }
-                    className="text-red-500"
+                    className="text-red-500 hover:text-red-700 cursor-pointer"
                   >
-                    Remove
+                    <MdDelete />
                   </button>
                 </div>
               ))}
